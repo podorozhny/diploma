@@ -1,6 +1,8 @@
 # GPS tracker
 
-![PCB](media/pcb.png)
+![PCB top](media/pcb-top.png)
+
+![PCB bottom](media/pcb-bottom.png)
 
 ![Assembly](media/assembly/13.png)
 
