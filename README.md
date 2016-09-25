@@ -4,6 +4,8 @@
 
 ![PCB bottom](media/pcb-bottom.png)
 
+![Schematic](media/schematic.png)
+
 ![Assembly](media/assembly/13.png)
 
 ![Assembly](media/assembly/14.png)
