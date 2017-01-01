@@ -1,0 +1,76 @@
+doctype html
+html(lang="en")
+    head
+        title
+            block title
+                | Dashboard / DodoTrack
+        link(rel="icon" href="/favicon.ico" type="image/x-icon")
+        block styles
+            link(href='/css/dashboard-dev.css' rel='stylesheet')
+    body
+        .ui.fixed.inverted.menu(style='height: 55px')
+            .ui.container
+                a.header.item(href='javascript:void(0)') DodoTrack
+                a.item(href='javascript:void(0)') Home
+                .ui.simple.dropdown.item
+                    | Dropdown
+                    i.dropdown.icon
+                    .menu
+                        a.item(href='javascript:void(0)') Link Item
+                        a.item(href='javascript:void(0)') Link Item
+                        .divider
+                        .header Header Item
+                        .item
+                            i.dropdown.icon
+                            | Sub Menu
+                            .menu
+                                a.item(href='javascript:void(0)') Link Item
+                                a.item(href='javascript:void(0)') Link Item
+                        a.item(href='javascript:void(0)') Link Item
+
+        block content
+
+        //.ui.inverted.vertical.footer.segment
+        //    .ui.center.aligned.container
+        //        .ui.stackable.inverted.divided.grid
+        //            .three.wide.column
+        //                h4.ui.inverted.header Group 1
+        //                .ui.inverted.link.list
+        //                    a.item(href='javascript:void(0)') Link One
+        //                    a.item(href='javascript:void(0)') Link Two
+        //                    a.item(href='javascript:void(0)') Link Three
+        //                    a.item(href='javascript:void(0)') Link Four
+        //
+        //            .three.wide.column
+        //                h4.ui.inverted.header Group 2
+        //                .ui.inverted.link.list
+        //                    a.item(href='javascript:void(0)') Link One
+        //                    a.item(href='javascript:void(0)') Link Two
+        //                    a.item(href='javascript:void(0)') Link Three
+        //                    a.item(href='javascript:void(0)') Link Four
+        //
+        //            .three.wide.column
+        //                h4.ui.inverted.header Group 3
+        //                .ui.inverted.link.list
+        //                    a.item(href='javascript:void(0)') Link One
+        //                    a.item(href='javascript:void(0)') Link Two
+        //                    a.item(href='javascript:void(0)') Link Three
+        //                    a.item(href='javascript:void(0)') Link Four
+        //
+        //            .seven.wide.column
+        //                h4.ui.inverted.header Footer Header
+        //                p.
+        //                    Extra space for a call to action inside
+        //                    the footer that could help re-engage users.
+        //
+        //        .ui.inverted.section.divider
+        //        img.ui.centered.mini.image(src='/img/logo.png')
+        //        .ui.horizontal.inverted.small.divided.link.list
+        //            a.item(href='javascript:void(0)') Site Map
+        //            a.item(href='javascript:void(0)') Contact Us
+        //            a.item(href='javascript:void(0)') Terms and Conditions
+        //            a.item(href='javascript:void(0)') Privacy Policy
+
+        block scripts
+            script(src='https://api-maps.yandex.ru/2.1/?lang=ru_RU' type='text/javascript')
+            script(src='/js/dashboard-dev.js' type='text/javascript')
