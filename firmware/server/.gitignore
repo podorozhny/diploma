@@ -111,6 +111,9 @@ _deprecations
 /web/js/
 /web/tpl/
 
+# Composer
+/vendor/
+
 # NPM
 /node_modules/
 
