@@ -96,10 +96,18 @@ gulp.task('clean-fonts', function () {
 });
 
 gulp.task('img', ['clean-img'], function () {
-    return gulp.src(config.build.src.img)
-        .pipe(gulpNewer(config.build.dest.img))
-        .pipe(gulp.dest(config.build.dest.img))
-        .pipe(browserSync.stream());
+    let streams = [];
+
+    Object.keys(config.build.src.img).forEach(function (key, value) {
+        streams.push(
+            gulp.src(config.build.src.img[key])
+                .pipe(gulpNewer(config.build.dest.img))
+                .pipe(gulp.dest(config.build.dest.img))
+                .pipe(browserSync.stream())
+        );
+    });
+
+    return eventStream.merge(streams);
 });
 
 gulp.task('clean-img', function () {
@@ -110,10 +118,8 @@ gulp.task('tpl', ['clean-tpl'], function () {
     let streams = [];
 
     Object.keys(config.build.src.tpl).forEach(function (key) {
-        let destination = config.build.dest.tpl + config.build.src.tpl[key];
-
         streams.push(
-            gulp.src(key)
+            gulp.src(config.build.src.tpl[key])
                 .pipe(gulpIf(
                     !isProd,
                     gulpPlumber({
@@ -131,7 +137,7 @@ gulp.task('tpl', ['clean-tpl'], function () {
                 .pipe(gulpPug({
                     pretty: !isProd
                 }))
-                .pipe(gulp.dest(destination))
+                .pipe(gulp.dest(config.build.dest.tpl))
                 .pipe(browserSync.stream())
         );
     });
@@ -147,14 +153,22 @@ gulp.task('css', ['clean-css'], function () {
     return css();
 });
 
+gulp.task('clean-css', function () {
+    return del(config.clean.css);
+});
+
 gulp.task('js', ['clean-js'], function () {
     return js();
+});
+
+gulp.task('clean-js', function () {
+    return del(config.clean.js);
 });
 
 function css() {
     let currentPathLength = path.resolve(__dirname).length;
 
-    const filterSass = gulpFilter(['**/*.sass', '**/*.scss'], { restore: true });
+    const filterSass = gulpFilter(['**/*.sass', '**/*.scss'], {restore: true});
 
     let sources = config.build.src.css,
         order   = [];
@@ -199,7 +213,7 @@ function css() {
                 }
             })
         ))
-        .pipe(gulpOrder(order, { base: './' }))
+        .pipe(gulpOrder(order, {base: './'}))
         .pipe(gulpConcat((function () {
             let filename = 'app';
 
@@ -220,12 +234,12 @@ function js() {
 
     const filterRequirejs = gulpFilter(
         ['**', '!node_modules/requirejs/require.js'],
-        { restore: true }
+        {restore: true}
     );
 
     const filterVendor = gulpFilter(
         ['**', '!node_modules/**'],
-        { restore: true }
+        {restore: true}
     );
 
     return gulp.src(config.build.src.js)

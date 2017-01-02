@@ -1,9 +1,9 @@
 require.config();
 
-requirejs(['jquery', 'bla/lol'], function ($, lol) {
-    console.log(lol ? 'dashboard is working!' : 'dashboard is not working!');
+requirejs(['jquery', 'components/test'], function ($, lol) {
+    console.log(lol ? 'application is working!' : 'application is not working!');
 
-    var coordinates = [
+    let coordinates = [
         [55.77258, 37.67906], [55.772954, 37.678968], [55.77298, 37.678975],
         [55.773903, 37.681157], [55.774499, 37.683178], [55.774663, 37.683644],
         [55.773527, 37.685078], [55.773242, 37.686713], [55.773187, 37.686871],
@@ -61,7 +61,7 @@ requirejs(['jquery', 'bla/lol'], function ($, lol) {
             suppressObsoleteBrowserNotifier: true,
         });
 
-        map.copyrights.add('&copy; DodoTrack');
+        map.copyrights.add('&copy; Ivan Podorozhny');
 
         map.geoObjects.add(new ymaps.Polyline(
             coordinates,
@@ -74,5 +74,14 @@ requirejs(['jquery', 'bla/lol'], function ($, lol) {
                 strokeWidth:   4
             }
         ));
+
+        $.each(coordinates, function (index, coordinate) {
+            map.geoObjects.add(new ymaps.Placemark(coordinate, {}, {
+                iconLayout:      'default#image',
+                iconImageHref:   '/img/dot.svg',
+                iconImageSize:   [4, 4],
+                iconImageOffset: [-2, -2]
+            }));
+        });
     });
 });

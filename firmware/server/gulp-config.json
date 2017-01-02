@@ -1,7 +1,7 @@
 {
     "build": {
-        "src":  {
-            "css":   [
+        "src": {
+            "css": [
                 "node_modules/semantic-ui/dist/components/reset.css",
                 "node_modules/semantic-ui/dist/components/site.css",
                 "node_modules/semantic-ui/dist/components/container.css",
@@ -16,43 +16,43 @@
                 "node_modules/font-awesome/css/font-awesome.css",
                 "assets/styles/core.scss"
             ],
-            "js":    [
+            "js": [
                 "node_modules/requirejs/require.js",
                 "node_modules/jquery/dist/jquery.js",
                 "node_modules/semantic-ui/dist/semantic.js",
                 "assets/scripts/**/*.js"
             ],
-            "tpl":   [
+            "tpl": [
                 "assets/templates/pages/*"
             ],
-            "img":   [
-                "assets/images"
+            "img": [
+                "assets/images/**"
             ],
             "fonts": {
-                "assets/fonts":                    "/",
+                "assets/fonts": "/",
                 "node_modules/font-awesome/fonts": "/"
             }
         },
         "dest": {
-            "css":   "web/css",
-            "js":    "web/js",
-            "img":   "web/img",
+            "css": "web/css",
+            "js": "web/js",
+            "img": "web/img",
             "fonts": "web/fonts",
-            "tpl":   "web/tpl"
+            "tpl": "web"
         }
     },
     "watch": {
-        "css":   "assets/styles/**",
-        "js":    "assets/scripts/**",
-        "tpl":   "assets/templates/**",
-        "img":   "assets/images/**",
+        "css": "assets/styles/**",
+        "js": "assets/scripts/**",
+        "tpl": "assets/templates/**",
+        "img": "assets/images/**",
         "fonts": "assets/fonts/**"
     },
     "clean": {
-        "css":   "web/css/**",
-        "js":    "web/js/**",
-        "img":   "web/img/**",
+        "css": "web/css/**",
+        "js": "web/js/**",
+        "img": "web/img/**",
         "fonts": "web/fonts/**",
-        "tpl":   "web/tpl/**"
+        "tpl": "web/**/*.html"
     }
 }
