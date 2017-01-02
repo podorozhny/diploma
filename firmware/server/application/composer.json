@@ -12,7 +12,8 @@
     "require": {
         "php": "^7.0",
         "silex/silex": "^2.0",
-        "twig/twig": "^1.30"
+        "twig/twig": "^1.30",
+        "doctrine/dbal": "^2.5"
     },
     "require-dev": {},
     "autoload": {
