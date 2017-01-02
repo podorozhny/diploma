@@ -3,11 +3,19 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Type;
+use Podorozhny\Doctrine\GeoPointType;
 use Silex\Application;
 use Silex\ControllerCollection;
 use Silex\Provider\DoctrineServiceProvider;
 use Silex\Provider\TwigServiceProvider;
+use Symfony\Component\Debug\ErrorHandler;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 $app = new Application();
 
@@ -27,6 +35,9 @@ $app->register(new DoctrineServiceProvider(), [
 /** @var Connection $db */
 $db = &$app['db'];
 
+Type::addType('geo_point', GeoPointType::class);
+$db->getDatabasePlatform()->registerDoctrineTypeMapping('GetPointType', 'geo_point');
+
 $app->register(new TwigServiceProvider(), [
     'twig.path'    => __DIR__ . '/../app/views',
     'twig.options' => ['debug' => $app['debug']],
@@ -39,6 +50,21 @@ $app->before(function (Request $request) {
     }
 });
 
+ErrorHandler::register();
+$app->error(function (\Exception $e, $code) use ($app) {
+    $error = ['message' => $e->getMessage()];
+
+    if ($e instanceof BadRequestHttpException) {
+        $code = Response::HTTP_BAD_REQUEST;
+    } elseif ($e instanceof NotFoundHttpException) {
+        $code = Response::HTTP_NOT_FOUND;
+    } elseif ($code < 400) {
+        $code = Response::HTTP_INTERNAL_SERVER_ERROR;
+    }
+
+    return $app->json($error, $code);
+});
+
 $app->get('/', function () use ($app) {
     return $app['twig']->render('pages/dashboard.html.twig');
 });
@@ -46,29 +72,76 @@ $app->get('/', function () use ($app) {
 /** @var ControllerCollection $apiVersion1 */
 $apiVersion1 = $app['controllers_factory'];
 
-$apiVersion1->get('/coordinates', function () use ($app) {
-    return $app->json('coordinates_list', 200);
+$apiVersion1->get('/device/{deviceUuid}/entries', function ($deviceUuid) use ($app, $db) {
+    $device = $db->fetchAssoc('SELECT * FROM devices WHERE uuid = :uuid', ['uuid' => $deviceUuid]);
+
+    if (!$device) {
+        throw new NotFoundHttpException(sprintf('No device with UUID "%s" found.', $deviceUuid));
+    }
+
+    $entries = $db->fetchAll(
+        'SELECT
+            id,
+            created_at,
+            device_uuid,
+            geo_point[0]::FLOAT AS longitude,
+            geo_point[1]::FLOAT AS latitude
+        FROM entries
+        WHERE device_uuid = :device_uuid',
+        ['device_uuid' => $deviceUuid]
+    );
+
+    foreach ($entries as &$entry) {
+        $entry['longitude'] = (float) $entry['longitude'];
+        $entry['latitude'] = (float) $entry['latitude'];
+    }
+
+    return $app->json($entries, 200);
 });
 
-$apiVersion1->get('/coordinates/last/{count}', function ($count) use ($app) {
-    return $app->json(sprintf('last_%d_coordinates_list', $count), 200);
-});
+$apiVersion1->post('/device/{deviceUuid}/entries', function (Request $request, $deviceUuid) use ($app, $db) {
+    $device = $db->fetchAssoc('SELECT * FROM devices WHERE uuid = :uuid', ['uuid' => $deviceUuid]);
 
-$apiVersion1->post('/coordinates/{deviceId}', function (Request $request, $deviceId) use ($app, $db) {
-    $device = $db->fetchAssoc('SELECT * FROM posts WHERE id = :id', ['id' => (int) $deviceId]);
+    if (!$device) {
+        throw new NotFoundHttpException(sprintf('No device with UUID "%s" found.', $deviceUuid));
+    }
 
-    var_dump($device);
-    die();
+    $resolver = new OptionsResolver();
+    $resolver->setRequired(['latitude', 'longitude']);
+    $resolver->setAllowedTypes('latitude', 'float');
+    $resolver->setAllowedTypes('longitude', 'float');
 
-//    $item = [
-//        'device_id' => $deviceId,
-//        'latitude'  => $request->request->get('latitude'),
-//        'longitude' => $request->request->get('longitude'),
-//    ];
-//
-    $item['created_at'] = (new \DateTime())->format('c');
+    try {
+        $options = $resolver->resolve($request->request->all());
+    } catch (InvalidArgumentException $e) {
+        throw new BadRequestHttpException($e->getMessage());
+    }
 
-    return $app->json($item, 201);
+    $result = $db->insert('entries', [
+        'device_uuid' => $deviceUuid,
+        'geo_point'   => sprintf('%s,%s', $options['latitude'], $options['longitude']),
+    ]);
+
+    if (!$result) {
+        throw new \RuntimeException('Error while inserting new entry.');
+    }
+
+    $entry = $db->fetchAssoc(
+        'SELECT
+            id,
+            created_at,
+            device_uuid,
+            geo_point[0]::FLOAT AS longitude,
+            geo_point[1]::FLOAT AS latitude
+        FROM entries
+        WHERE id = :id',
+        ['id' => (int) $db->lastInsertId()]
+    );
+
+    $entry['longitude'] = (float) $entry['longitude'];
+    $entry['latitude'] = (float) $entry['latitude'];
+
+    return $app->json($entry, 201);
 });
 
 $app->mount('/api/v1', $apiVersion1);

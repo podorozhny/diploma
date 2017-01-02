@@ -18,6 +18,7 @@ services:
     database:
         volumes:
             - dbdata:/var/lib/postgresql/data
+            - ./dumps:/dumps
 
 volumes:
     dbdata:

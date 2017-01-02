@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-container=$(docker-compose ps | grep "php" | cut -d" " -f 1)
-
-docker exec -it $container /bin/bash -c "rm -rf /tmp/application/cache/*"

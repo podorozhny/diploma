@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-ROOT=`pwd`
-
-ln -s "$ROOT/support/scripts/hooks/pre-commit" "$ROOT/.git/hooks/pre-commit"
