@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+export $(cat ".env" | xargs)
+
+database_container=$(docker-compose ps | grep "database" | cut -d" " -f 1)
+
+tables=$(ls ./dumps/)
+
+for table in $tables
+do
+    echo "Restoring $table..."
+    docker exec -it $database_container sh -c "
+        exec mysql -h database \
+            -u $DB_USER \
+            -p$DB_PASS \
+            $DB_NAME < "/dumps/$table"
+    " && \
+    echo "Successfully restored $table." || \
+    echo "Error while restoring $table."
+done

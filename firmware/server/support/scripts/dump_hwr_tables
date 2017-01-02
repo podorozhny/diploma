@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+export $(cat ".env" | xargs)
+
+database_container=$(docker-compose ps | grep "database" | cut -d" " -f 1)
+
+datetime=`date +%Y-%m-%d-%H-%M-%S`
+dump_path="/dumps/hwr-tables-$datetime.sql"
+
+echo "Dumping hwr tables..."
+docker exec -it $database_container sh -c "
+    exec mysqldump -h database \
+        -u $DB_USER \
+        -p$DB_PASS \
+        $DB_NAME \
+        hwr_big_order_configs \
+        hwr_big_orders \
+        hwr_component_attribute_values \
+        hwr_component_attributes \
+        hwr_components \
+        hwr_configuration_components \
+        hwr_configurations \
+        hwr_locations \
+        hwr_pre_order_approvals \
+        hwr_pre_orders \
+        hwr_unique_configuration_checksums \
+    > "$dump_path"
+" && \
+    echo "Successfully dumped hwr table into $dump_path." || \
+    echo "Error while dumping hwr tables."
+
+

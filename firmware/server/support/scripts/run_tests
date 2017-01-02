@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+COMPOSE_FILE=docker-compose.yml:support/docker-compose.test.yml
+
+# Run unit tests
+docker-compose run --no-deps php bin/phpunit && \
+
+# Run functional tests
+#docker-compose up --no-deps -d database && \
+#docker-compose run --rm --no-deps php bin/healthcheck 10 && \
+#docker-compose run --rm --no-deps php bin/run_functional_tests
+
+if [ $? -eq 0 ]
+then
+  echo "Tests passed!"
+else
+  echo "Tests failed!" >&2
+fi
+
+# Cleanup after tests
+docker-compose kill && \
+docker-compose rm -f

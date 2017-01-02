@@ -1,0 +1,29 @@
+version: '2'
+
+services:
+    php:
+        build:
+            context: ./
+            dockerfile: ./docker/php/Dockerfile
+        depends_on:
+            - database
+        environment:
+            - DATABASE__USER=${DB_USER}
+            - DATABASE__NAME=${DB_NAME}
+            - DATABASE__PASS=${DB_PASS}
+
+    front:
+        build:
+            context: ./
+            dockerfile: ./docker/front/Dockerfile
+        depends_on:
+            - php
+
+    database:
+        build:
+            context: ./
+            dockerfile: ./docker/database/Dockerfile
+        environment:
+            - POSTGRES_DB=${DB_NAME}
+            - POSTGRES_USER=${DB_USER}
+            - POSTGRES_PASSWORD=${DB_PASS}

@@ -1,0 +1,4 @@
+/application/node_modules/
+/application/var/cache/
+/application/var/logs/
+/application/var/sessions/

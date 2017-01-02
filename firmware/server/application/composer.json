@@ -1,0 +1,23 @@
+{
+    "name": "podorozhny/gps-tracker",
+    "type": "project",
+    "description": "Tracking system",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Ivan Podorozhny",
+            "email": "ivan@podorozhny.ru"
+        }
+    ],
+    "require": {
+        "php": "^7.0",
+        "silex/silex": "^2.0",
+        "twig/twig": "^1.30"
+    },
+    "require-dev": {},
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    }
+}

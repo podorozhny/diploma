@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+container=$(docker-compose ps | grep "php" | cut -d" " -f 1)
+
+docker exec -it $container /bin/bash -c "\
+   bin/console doctrine:schema:drop --force && \
+   bin/console doctrine:schema:update --force && \
+   bin/console doctrine:fixtures:load! --no-interaction -vvv \
+"
