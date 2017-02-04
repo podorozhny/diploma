@@ -28,9 +28,6 @@ ALTER TABLE entries ADD CONSTRAINT fk_entries_device_uuid FOREIGN KEY (device_uu
 
 INSERT INTO devices (uuid, name) VALUES ('dfedfddd-1de4-4df7-a9b7-021289d2b976', 'test');
 
-INSERT INTO entries (device_uuid, geo_point) VALUES ('dfedfddd-1de4-4df7-a9b7-021289d2b976', '55.772580,37.679060');
-INSERT INTO entries (device_uuid, geo_point) VALUES ('dfedfddd-1de4-4df7-a9b7-021289d2b976', '55.772954,37.678968');
-INSERT INTO entries (device_uuid, geo_point) VALUES ('dfedfddd-1de4-4df7-a9b7-021289d2b976', '55.772980,37.678975');
 INSERT INTO entries (device_uuid, geo_point) VALUES ('dfedfddd-1de4-4df7-a9b7-021289d2b976', '55.773903,37.681157');
 INSERT INTO entries (device_uuid, geo_point) VALUES ('dfedfddd-1de4-4df7-a9b7-021289d2b976', '55.774499,37.683178');
 INSERT INTO entries (device_uuid, geo_point) VALUES ('dfedfddd-1de4-4df7-a9b7-021289d2b976', '55.774663,37.683644');

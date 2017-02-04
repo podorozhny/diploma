@@ -66,7 +66,7 @@ $app->error(function (\Exception $e, $code) use ($app) {
 });
 
 $app->get('/', function () use ($app) {
-    return $app['twig']->render('pages/dashboard.html.twig');
+    return $app['twig']->render('pages/map.html.twig');
 });
 
 /** @var ControllerCollection $apiVersion1 */
