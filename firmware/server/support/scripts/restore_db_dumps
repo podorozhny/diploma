@@ -2,14 +2,14 @@
 
 export $(cat ".env" | xargs)
 
-container=$(docker-compose ps | grep "database" | cut -d" " -f 1)
+database_container=$(docker-compose ps | grep "database" | cut -d" " -f 1)
 
-docker exec -it $container sh -c "
-    PGPASSWORD=$DB_PASS psql --host database \
-        --port=5432 \
-        --username=$DB_USER \
-        --dbname=$DB_NAME \
-        -1 -f /dumps/dump.sql
+docker exec -it $database_container sh -c " \
+        exec psql --host=database \
+            --port=5432 \
+            --username=$DB_USER \
+            --dbname=$DB_NAME \
+            -1 -f /dumps/dump.sql \
     " && \
-    echo "Successfully restored dump." || \
-    echo "Error while restoring dump."
+    echo "Successfully restored $table." || \
+    echo "Error while restoring $table."

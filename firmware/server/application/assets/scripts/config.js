@@ -28,7 +28,7 @@ requirejs(['jquery', 'components/test'], ($, lol) => {
             suppressObsoleteBrowserNotifier: true,
         });
 
-        map.copyrights.add('&copy; Ivan Podorozhny');
+        map.copyrights.add('&copy; Иван Подорожный');
 
         $.getJSON('/api/v1/device/dfedfddd-1de4-4df7-a9b7-021289d2b976/entries', [], (entries, textStatus) => {
             if (textStatus !== 'success') {
@@ -51,22 +51,22 @@ requirejs(['jquery', 'components/test'], ($, lol) => {
                 }
             ));
 
-//            $.each(entries, function (index, entry) {
-//                map.geoObjects.add(
-//                    new ymaps.Placemark(
-//                        [entry.longitude, entry.latitude],
-//                        {
-//                            balloonContent: '<pre>' + JSON.stringify(entry, null, 2) + '</pre>'
-//                        },
-//                        {
-//                            iconLayout:      'default#image',
-//                            iconImageHref:   '/img/dot.svg',
-//                            iconImageSize:   [4, 4],
-//                            iconImageOffset: [-2, -2]
-//                        }
-//                    )
-//                );
-//            });
+            $.each(entries, function (index, entry) {
+                map.geoObjects.add(
+                    new ymaps.Placemark(
+                        [entry.longitude, entry.latitude],
+                        {
+                            balloonContent: '<pre>' + JSON.stringify(entry, null, 2) + '</pre>'
+                        },
+                        {
+                            iconLayout:      'default#image',
+                            iconImageHref:   '/img/dot.svg',
+                            iconImageSize:   [4, 4],
+                            iconImageOffset: [-2, -2]
+                        }
+                    )
+                );
+            });
         });
     });
 });

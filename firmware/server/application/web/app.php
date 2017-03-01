@@ -25,9 +25,9 @@ $app->register(new DoctrineServiceProvider(), [
     'db.options' => [
         'driver'   => 'pdo_pgsql',
         'host'     => 'database',
-        'dbname'   => 'bot_db',
-        'user'     => 'bot',
-        'password' => 'bot',
+        'dbname'   => 'dbname',
+        'user'     => 'dbuser',
+        'password' => 'dbpass',
         'charset'  => 'utf8',
     ],
 ]);
