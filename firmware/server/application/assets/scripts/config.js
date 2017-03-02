@@ -35,22 +35,7 @@ requirejs(['jquery', 'components/test'], ($, lol) => {
                 throw new Error('API error.');
             }
 
-            let coordinates = entries.map((entry) => {
-                return [entry.longitude, entry.latitude];
-            });
-
-            map.geoObjects.add(new ymaps.Polyline(
-                coordinates,
-                {
-                    hintContent: 'Полилиния, соединяющая координаты'
-                },
-                {
-                    strokeColor:   '#ff0000',
-                    strokeOpacity: 1,
-                    strokeWidth:   4
-                }
-            ));
-
+            // dots
             $.each(entries, function (index, entry) {
                 map.geoObjects.add(
                     new ymaps.Placemark(
@@ -60,13 +45,45 @@ requirejs(['jquery', 'components/test'], ($, lol) => {
                         },
                         {
                             iconLayout:      'default#image',
-                            iconImageHref:   '/img/dot.svg',
-                            iconImageSize:   [4, 4],
-                            iconImageOffset: [-2, -2]
+                            iconImageHref:   '/img/black-dot.svg',
+                            iconImageSize:   [6, 6],
+                            iconImageOffset: [-3, -3]
                         }
                     )
                 );
             });
+
+            let coordinates = entries.map((entry) => {
+                return [entry.longitude, entry.latitude];
+            });
+
+            // polyline
+            map.geoObjects.add(new ymaps.Polyline(
+                coordinates,
+                {
+                    hintContent: 'Полилиния, соединяющая координаты'
+                },
+                {
+                    strokeColor:   '#ff0000',
+                    strokeOpacity: 0.5,
+                    strokeWidth:   6
+                }
+            ));
+
+            let lastEntry = entries.pop();
+
+            map.setCenter([lastEntry.longitude, lastEntry.latitude], 17);
+
+            // last dot circle
+            map.geoObjects.add(
+                new ymaps.Circle(
+                    [[lastEntry.longitude, lastEntry.latitude], 100],
+                    {},
+                    {
+                        opacity: 0.5
+                    }
+                )
+            );
         });
     });
 });
