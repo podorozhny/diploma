@@ -102,7 +102,8 @@ $apiVersion1->get(
             geo_point[0]::FLOAT AS longitude,
             geo_point[1]::FLOAT AS latitude
         FROM entries
-        WHERE device_uuid = :device_uuid',
+        WHERE device_uuid = :device_uuid
+        ORDER BY created_at desc',
             ['device_uuid' => $deviceUuid]
         );
 
